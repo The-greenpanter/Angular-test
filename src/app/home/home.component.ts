@@ -1,58 +1,43 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { WeatherService } from '../weather.service';
-import { WeatherData } from '../weather-data.model';  // (Optional) Import if using the model
+import { ChartOptions, ChartType, ChartDataset } from 'chart.js';
 
 @Component({
   selector: 'app-weather',
-  templateUrl: './weather.component.html',
+  templateUrl: '/src/app/weather/weather.component.html',
   styleUrls: ['./weather.component.css']
 })
 export class WeatherComponent implements OnInit {
-
-  stationId: string = '';
-  forecastData: any = null;  // Can use WeatherData type if defined
-  chartOptions: any;
+  public lineChartData: ChartDataset<'line'>[] = [{ data: [], label: 'Temperature' }];
+  public lineChartLabels: string[] = [];
+  public lineChartOptions: ChartOptions = {
+    responsive: true,
+  };
+  public lineChartColors = [
+    {
+      borderColor: 'black',
+      backgroundColor: 'rgba(255,0,0,0.3)',
+    },
+  ];
+  public lineChartLegend = true;
+  public lineChartPlugins = [];
+  public lineChartType: ChartType = 'line';
 
   constructor(
     private route: ActivatedRoute,
     private weatherService: WeatherService
   ) { }
 
-  ngOnInit() {
-    this.stationId = this.route.snapshot.params['stationId'];
-    this.getForecast();
-  }
-
-  getForecast() {
-    this.weatherService.getForecast(this.stationId)
-      .subscribe(data => {
-        this.forecastData = data;
-        this.prepareChartData();
-      });
-  }
-
-  prepareChartData() {
-    // Extract temperature data and format for Chart.js
-    const labels: string[] = [];
-    const temperatures: number[] = [];
-    // ... (Logic to extract labels and temperatures from forecastData)
-
-    this.chartOptions = {
-      type: 'line',  // Chart type: line chart in this case
-      data: {
-        labels,
-        datasets: [{
-          label: 'Temperature (°C)',
-          data: temperatures,
-          backgroundColor: 'rgba(255, 99, 132, 0.2)',
-          borderColor: 'rgba(255, 99, 132, 1)',
-          borderWidth: 1
-        }]
-      },
-      options: {
-        // Additional Chart.js configuration options for scaling, titles, etc.
+  ngOnInit(): void {
+    this.route.paramMap.subscribe(params => {
+      const location = params.get('id');
+      if (location) {
+        this.weatherService.getForecast(location).subscribe((data: any) => {
+          this.lineChartLabels = data.properties.periods.map((d: any) => new Date(d.startTime).toLocaleString());
+          this.lineChartData[0].data = data.properties.periods.map((d: any) => d.temperature);
+        });
       }
-    };
+    });
   }
 }

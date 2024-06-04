@@ -1,18 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { WeatherService } from '../weather.service';
+import { ChartOptions, ChartType, ChartDataset } from 'chart.js';
 import { WeatherData } from '../weather-data.model';  // Import if using the model
 
 @Component({
-  selector: 'app-weather',
+  selector: 'weather-app',
   templateUrl: './weather.component.html',
   styleUrls: ['./weather.component.css']
-})
+}),
 export class WeatherComponent implements OnInit {
 
   stationId: string = '';
   forecastData: any = null;  // Can use WeatherData type if defined
   chartOptions: any;
+lineChartLabels: any;
+lineChartData: any;
+lineChartOptions: any;
+lineChartColors: any;
+lineChartLegend: any;
+lineChartType: any;
+lineChartPlugins: any;
 
   constructor(
     private route: ActivatedRoute,
