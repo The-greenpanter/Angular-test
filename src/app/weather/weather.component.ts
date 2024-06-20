@@ -1,26 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { WeatherService } from '../weather.service';
+import { Chart } from 'chart.js';
 import { ChartOptions, ChartType, ChartDataset } from 'chart.js';
 import { WeatherData } from '../weather-data.model';  // Import if using the model
 
 @Component({
   selector: 'weather-app',
   templateUrl: './weather.component.html',
-  styleUrls: ['./weather.component.css']
-}),
+  styleUrls: ['./weather.component.sass']
+})
 export class WeatherComponent implements OnInit {
 
   stationId: string = '';
-  forecastData: any = null;  // Can use WeatherData type if defined
-  chartOptions: any;
-lineChartLabels: any;
-lineChartData: any;
-lineChartOptions: any;
-lineChartColors: any;
-lineChartLegend: any;
-lineChartType: any;
-lineChartPlugins: any;
+  forecastData: WeatherData | null = null;  // Use WeatherData type if defined
+  chartOptions!: ChartOptions;
 
   constructor(
     private route: ActivatedRoute,
@@ -42,11 +36,28 @@ lineChartPlugins: any;
 
   prepareChartData() {
     // Extract temperature data and format for Chart.js
-    const labels = [];
-    const temperatures = [];
-    // ... (Logic to extract labels and temperatures from forecastData)
+    const labels: string[] = [];
+    const temperatures: number[] = [];
+    // ... (Logic to extract date/time from forecastData and format for labels)
+    // ... (Logic to extract temperature values from forecastData and populate temperatures)
+
     this.chartOptions = {
-      // Configure Chart.js options: labels, datasets, etc.
+      responsive: true, // Makes the chart responsive to screen size
+      scales: {
+        xAxes: 
+          {
+            ticks: {
+              display: true  // Display labels on the X-axis
+            }
+          }
+        ,
+        yAxes: 
+          {
+            ticks: {
+              display: true  // Display labels on the Y-axis
+            }
+          }
+      }
     };
   }
 }

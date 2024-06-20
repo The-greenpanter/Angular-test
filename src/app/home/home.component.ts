@@ -5,8 +5,7 @@ import { ChartOptions, ChartType, ChartDataset } from 'chart.js';
 
 @Component({
   selector: 'app-weather',
-  templateUrl: '/src/app/weather/weather.component.html',
-  styleUrls: ['./weather.component.css']
+  templateUrl: '/src/app/weather/weather.component.html'
 })
 export class WeatherComponent implements OnInit {
   public lineChartData: ChartDataset<'line'>[] = [{ data: [], label: 'Temperature' }];
